@@ -1,4 +1,4 @@
-const CACHE_NAME = 'esboco-pregacoes-v7';
+const CACHE_NAME = 'esboco-pregacoes-v8';
 const ASSETS = [
   './',
   './index.html',

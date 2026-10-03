@@ -23,6 +23,7 @@
   let timerSeconds = 0;
   let isTimerRunning = false;
   let pulpitFontSize = 24;
+  let pulpitClockInterval = null;
 
   // Modelos Homiléticos Pré-configurados
   const TEMPLATES = {
@@ -475,6 +476,65 @@
   }
 
   /**
+   * Atualiza barra de estatísticas homiléticas em tempo real
+   */
+  function updateSermonStats() {
+    const sermon = getCurrentSermon();
+    const statEstimatedTime = document.getElementById('statEstimatedTime');
+    const statWordCount = document.getElementById('statWordCount');
+    const statTopicCount = document.getElementById('statTopicCount');
+
+    if (!sermon) {
+      if (statEstimatedTime) statEstimatedTime.textContent = '~0 min de pregação';
+      if (statWordCount) statWordCount.textContent = '0 palavras';
+      if (statTopicCount) statTopicCount.textContent = '0 pontos';
+      return;
+    }
+
+    // Coleta todo o texto homilético relevante
+    const parts = [
+      sermon.title || '',
+      sermon.passage || '',
+      sermon.passage_text || '',
+      sermon.theme || '',
+      sermon.series || '',
+      sermon.introduction || '',
+      sermon.conclusion || ''
+    ];
+
+    if (Array.isArray(sermon.topics)) {
+      sermon.topics.forEach((t) => {
+        parts.push(t.title || '');
+        parts.push(t.passage || '');
+        parts.push(t.passage_text || '');
+        parts.push(t.explanation || '');
+        parts.push(t.illustration || '');
+        parts.push(t.application || '');
+      });
+    }
+
+    const fullText = parts.join(' ').trim();
+    const words = fullText ? fullText.split(/\s+/).filter(Boolean).length : 0;
+    const topicCount = Array.isArray(sermon.topics) ? sermon.topics.length : 0;
+
+    // Ritmo de fala homilético padrão: média de ~130 palavras por minuto
+    let estimatedMinutes = 0;
+    if (words > 0) {
+      estimatedMinutes = Math.max(1, Math.round(words / 130));
+    }
+
+    if (statEstimatedTime) {
+      statEstimatedTime.textContent = `~${estimatedMinutes} min de pregação`;
+    }
+    if (statWordCount) {
+      statWordCount.textContent = `${words} ${words === 1 ? 'palavra' : 'palavras'}`;
+    }
+    if (statTopicCount) {
+      statTopicCount.textContent = `${topicCount} ${topicCount === 1 ? 'ponto' : 'pontos'}`;
+    }
+  }
+
+  /**
    * Preenche o formulário do editor com os dados do sermão
    */
   function populateEditor(sermon) {
@@ -491,6 +551,7 @@
 
     renderTopics(sermon.topics || []);
     renderDeliveries(sermon.delivery_history || []);
+    updateSermonStats();
   }
 
   /**
@@ -523,6 +584,22 @@
     sermon.introduction = document.getElementById('sermonIntro').value;
     sermon.conclusion = document.getElementById('sermonConclusion').value;
     sermon.updated_at = Date.now();
+    updateSermonStats();
+  }
+
+  /**
+   * Move posição de um tópico (reordenação homilética)
+   */
+  function moveTopic(fromIndex, delta) {
+    const sermon = getCurrentSermon();
+    if (!sermon || !Array.isArray(sermon.topics)) return;
+    const toIndex = fromIndex + delta;
+    if (toIndex < 0 || toIndex >= sermon.topics.length) return;
+
+    const [moved] = sermon.topics.splice(fromIndex, 1);
+    sermon.topics.splice(toIndex, 0, moved);
+    renderTopics(sermon.topics);
+    triggerAutosave();
   }
 
   /**
@@ -539,7 +616,13 @@
 
       card.innerHTML = `
         <div class="topic-top-bar">
-          <span class="topic-number-badge">Ponto ${index + 1}</span>
+          <div class="topic-top-left">
+            <span class="topic-number-badge">Ponto ${index + 1}</span>
+            <div class="topic-order-controls">
+              <button type="button" class="btn-topic-move btn-topic-up" data-index="${index}" ${index === 0 ? 'disabled' : ''} title="Mover ponto para cima (anterior)">↑</button>
+              <button type="button" class="btn-topic-move btn-topic-down" data-index="${index}" ${index === topics.length - 1 ? 'disabled' : ''} title="Mover ponto para baixo (seguinte)">↓</button>
+            </div>
+          </div>
           <button type="button" class="btn-remove-topic" data-index="${index}" title="Remover este ponto">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: -2px; margin-right: 4px;"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>Remover Ponto
           </button>
@@ -547,40 +630,68 @@
 
         <div class="form-grid">
           <div class="form-group" style="grid-column: span 2;">
-            <label class="form-label">Título da Divisão / Afirmação do Ponto</label>
-            <input type="text" class="input-text topic-title-input" data-index="${index}" value="${sanitize(topic.title)}" placeholder="Ex: A Fidelidade de Deus nos Meus Desertos">
+            <label class="form-label sub-field-label">
+              <span>🏷️ Título da Divisão / Afirmação do Ponto</span>
+            </label>
+            <input type="text" class="input-text topic-title-input" data-index="${index}" value="${sanitize(topic.title)}" placeholder="Ex: 1. A Fidelidade de Deus no Deserto">
           </div>
           <div class="form-group">
-            <label class="form-label">Referência Bíblica de Apoio</label>
+            <label class="form-label sub-field-label">
+              <span>📖 Referência Bíblica de Apoio</span>
+            </label>
             <input type="text" class="input-text topic-passage-input" data-index="${index}" value="${sanitize(topic.passage)}" placeholder="Ex: Salmo 23:4">
           </div>
           <div class="form-group">
-            <label class="form-label">
-              Texto dos Versículos de Apoio
-              <span class="hint">Para leitura no púlpito</span>
+            <label class="form-label sub-field-label">
+              <span>📜 Texto dos Versículos de Apoio</span>
+              <span class="hint">Visível no Modo Púlpito</span>
             </label>
             <textarea class="textarea-custom topic-passagetext-input" data-index="${index}" rows="2" placeholder="Cole os versículos deste ponto...">${sanitize(topic.passage_text || '')}</textarea>
           </div>
         </div>
 
         <div class="form-group">
-          <label class="form-label">Explicação Bíblica & Teológica</label>
-          <textarea class="textarea-custom topic-explanation-input" data-index="${index}" rows="3" placeholder="O que o texto diz e ensina doutrinariamente...">${sanitize(topic.explanation)}</textarea>
+          <label class="form-label sub-field-label">
+            <span>✍️ Explicação Bíblica & Teológica</span>
+          </label>
+          <textarea class="textarea-custom topic-explanation-input" data-index="${index}" rows="3" placeholder="O que o texto bíblico diz e ensina doutrinariamente...">${sanitize(topic.explanation)}</textarea>
         </div>
 
         <div class="form-grid">
           <div class="form-group">
-            <label class="form-label">Ilustração / Exemplo Prático</label>
-            <textarea class="textarea-custom topic-illustration-input" data-index="${index}" rows="2" placeholder="História, metáfora, testemunho ou comparação...">${sanitize(topic.illustration)}</textarea>
+            <label class="form-label sub-field-label">
+              <span>💡 Ilustração / Exemplo Prático</span>
+            </label>
+            <textarea class="textarea-custom topic-illustration-input" data-index="${index}" rows="2" placeholder="História, metáfora, testemunho ou comparação contemporânea...">${sanitize(topic.illustration)}</textarea>
           </div>
           <div class="form-group">
-            <label class="form-label">Aplicação para a Igreja</label>
+            <label class="form-label sub-field-label">
+              <span>🎯 Aplicação para a Igreja</span>
+            </label>
             <textarea class="textarea-custom topic-application-input" data-index="${index}" rows="2" placeholder="O que o ouvinte deve fazer a respeito desta verdade...">${sanitize(topic.application)}</textarea>
           </div>
         </div>
       `;
 
       container.appendChild(card);
+    });
+
+    // Reordenação de tópicos
+    container.querySelectorAll('.btn-topic-up').forEach((btn) => {
+      btn.addEventListener('click', (e) => {
+        const idx = parseInt(e.currentTarget.dataset.index, 10);
+        if (idx > 0) moveTopic(idx, -1);
+      });
+    });
+
+    container.querySelectorAll('.btn-topic-down').forEach((btn) => {
+      btn.addEventListener('click', (e) => {
+        const idx = parseInt(e.currentTarget.dataset.index, 10);
+        const sermon = getCurrentSermon();
+        if (sermon && sermon.topics && idx < sermon.topics.length - 1) {
+          moveTopic(idx, 1);
+        }
+      });
     });
 
     // Eventos dos campos dos tópicos
@@ -591,6 +702,7 @@
         if (sermon && sermon.topics[idx]) {
           sermon.topics[idx].title = e.target.value;
           triggerAutosave();
+          updateSermonStats();
         }
       });
     });
@@ -602,6 +714,7 @@
         if (sermon && sermon.topics[idx]) {
           sermon.topics[idx].passage = e.target.value;
           triggerAutosave();
+          updateSermonStats();
         }
       });
     });
@@ -613,6 +726,7 @@
         if (sermon && sermon.topics[idx]) {
           sermon.topics[idx].passage_text = e.target.value;
           triggerAutosave();
+          updateSermonStats();
         }
       });
     });
@@ -624,6 +738,7 @@
         if (sermon && sermon.topics[idx]) {
           sermon.topics[idx].explanation = e.target.value;
           triggerAutosave();
+          updateSermonStats();
         }
       });
     });
@@ -635,6 +750,7 @@
         if (sermon && sermon.topics[idx]) {
           sermon.topics[idx].illustration = e.target.value;
           triggerAutosave();
+          updateSermonStats();
         }
       });
     });
@@ -646,6 +762,7 @@
         if (sermon && sermon.topics[idx]) {
           sermon.topics[idx].application = e.target.value;
           triggerAutosave();
+          updateSermonStats();
         }
       });
     });
@@ -658,11 +775,14 @@
           sermon.topics.splice(idx, 1);
           renderTopics(sermon.topics);
           triggerAutosave();
+          updateSermonStats();
         } else {
           showToast('O sermão deve ter pelo menos um ponto principal.', 'error');
         }
       });
     });
+
+    updateSermonStats();
   }
 
   /**
@@ -999,6 +1119,11 @@
 
     overlay.classList.add('active');
 
+    // Inicializar relógio de púlpito em tempo real
+    updatePulpitClock();
+    if (pulpitClockInterval) clearInterval(pulpitClockInterval);
+    pulpitClockInterval = setInterval(updatePulpitClock, 1000);
+
     // Tentar tela cheia
     if (document.documentElement.requestFullscreen) {
       document.documentElement.requestFullscreen().catch(() => {});
@@ -1008,8 +1133,39 @@
   function exitPulpitMode() {
     const overlay = document.getElementById('pulpitOverlay');
     overlay.classList.remove('active');
+    if (pulpitClockInterval) {
+      clearInterval(pulpitClockInterval);
+      pulpitClockInterval = null;
+    }
     if (document.fullscreenElement && document.exitFullscreen) {
       document.exitFullscreen().catch(() => {});
+    }
+  }
+
+  /**
+   * Atualiza relógio em tempo real do púlpito (hora local)
+   */
+  function updatePulpitClock() {
+    const clockValue = document.getElementById('pulpitCurrentTimeValue');
+    if (!clockValue) return;
+    const now = new Date();
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    clockValue.textContent = `${hours}:${minutes}`;
+  }
+
+  /**
+   * Alterna Tela Cheia Nativa do Navegador no Modo Púlpito
+   */
+  function togglePulpitFullscreen() {
+    if (!document.fullscreenElement) {
+      if (document.documentElement.requestFullscreen) {
+        document.documentElement.requestFullscreen().catch(() => {});
+      }
+    } else {
+      if (document.exitFullscreen) {
+        document.exitFullscreen().catch(() => {});
+      }
     }
   }
 
@@ -1018,13 +1174,26 @@
    */
   function toggleTimer() {
     const btn = document.getElementById('btnTimerToggle');
+    const label = document.getElementById('btnTimerToggleLabel');
     if (isTimerRunning) {
       clearInterval(timerInterval);
       isTimerRunning = false;
-      btn.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg> Continuar`;
+      if (label) {
+        label.textContent = 'Continuar';
+        const svg = btn.querySelector('svg');
+        if (svg) svg.outerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>`;
+      } else {
+        btn.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg> Continuar`;
+      }
     } else {
       isTimerRunning = true;
-      btn.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg> Pausar`;
+      if (label) {
+        label.textContent = 'Pausar';
+        const svg = btn.querySelector('svg');
+        if (svg) svg.outerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>`;
+      } else {
+        btn.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg> Pausar`;
+      }
       timerInterval = setInterval(() => {
         timerSeconds++;
         updateTimerDisplay();
@@ -1036,7 +1205,15 @@
     clearInterval(timerInterval);
     isTimerRunning = false;
     timerSeconds = 0;
-    document.getElementById('btnTimerToggle').innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg> Iniciar`;
+    const btn = document.getElementById('btnTimerToggle');
+    const label = document.getElementById('btnTimerToggleLabel');
+    if (label) {
+      label.textContent = 'Iniciar';
+      const svg = btn.querySelector('svg');
+      if (svg) svg.outerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>`;
+    } else if (btn) {
+      btn.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg> Iniciar`;
+    }
     updateTimerDisplay();
   }
 
@@ -1214,8 +1391,23 @@
     // Botão de Ministração
     document.getElementById('btnAddDelivery').addEventListener('click', addDelivery);
 
+    // Atalho de Teclado: Ctrl+Enter ou Cmd+Enter para entrar no Modo Púlpito
+    window.addEventListener('keydown', (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+        const overlay = document.getElementById('pulpitOverlay');
+        if (overlay && !overlay.classList.contains('active')) {
+          e.preventDefault();
+          enterPulpitMode();
+        }
+      }
+    });
+
     // Modo Púlpito Controles
     document.getElementById('btnExitPulpit').addEventListener('click', exitPulpitMode);
+    const btnPulpitFullscreen = document.getElementById('btnPulpitFullscreen');
+    if (btnPulpitFullscreen) {
+      btnPulpitFullscreen.addEventListener('click', togglePulpitFullscreen);
+    }
     document.getElementById('btnTimerToggle').addEventListener('click', toggleTimer);
     document.getElementById('btnTimerReset').addEventListener('click', resetTimer);
     document.getElementById('btnFontInc').addEventListener('click', () => adjustFontSize(2));

@@ -11,7 +11,7 @@
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#f7f7f5">
 
-  <link rel="stylesheet" href="styles.css?v=7">
+  <link rel="stylesheet" href="styles.css?v=8">
 </head>
 <body data-pulpit-theme="dark">
 
@@ -60,6 +60,9 @@
         </button>
       </div>
     </aside>
+
+    <!-- Espaçador estável para evitar layout shift no hover -->
+    <div class="sidebar-spacer" id="sidebarSpacer" aria-hidden="true"></div>
 
     <!-- ÁREA PRINCIPAL (EDITOR HOMILÉTICO) -->
     <main class="main-content">
@@ -121,6 +124,22 @@
       <!-- Formulário do Editor de Homilética -->
       <div class="editor-scroll-area">
         <div class="editor-container">
+
+          <!-- Barra de Estatísticas Homiléticas em Tempo Real -->
+          <div class="sermon-stats-bar">
+            <div class="stat-pill" title="Tempo estimado de pregação (baseado em ritmo de fala médio de ~130 palavras/minuto)">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              <span id="statEstimatedTime">~0 min de pregação</span>
+            </div>
+            <div class="stat-pill" title="Contador total de palavras do esboço">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10M6 10h10M6 14h6"/></svg>
+              <span id="statWordCount">0 palavras</span>
+            </div>
+            <div class="stat-pill" title="Total de pontos homiléticos estruturados">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+              <span id="statTopicCount">0 pontos</span>
+            </div>
+          </div>
 
           <!-- CARD 1: IDENTIFICAÇÃO E CABEÇALHO DO SERMÃO -->
           <section class="card-section">
@@ -299,7 +318,7 @@
         <!-- Cronômetro de Púlpito -->
         <div class="pulpit-timer-display" id="pulpitTimerDisplay">00:00</div>
         <div class="timer-controls">
-          <button id="btnTimerToggle" class="btn-timer-action" title="Iniciar / Pausar">
+          <button id="btnTimerToggle" class="btn-timer-action" title="Iniciar / Pausar cronômetro">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
             <span id="btnTimerToggleLabel">Iniciar</span>
           </button>
@@ -308,11 +327,23 @@
             Zerar
           </button>
         </div>
+
+        <!-- Relógio em Tempo Real (Hora Atual) -->
+        <div class="pulpit-clock-display" id="pulpitCurrentTime" title="Horário Atual de Brasília / Local">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <span id="pulpitCurrentTimeValue">--:--</span>
+        </div>
       </div>
 
       <div class="pulpit-header-center" id="pulpitHeaderTitle">Título da Mensagem</div>
 
       <div class="pulpit-header-right">
+        <!-- Tela Cheia Real -->
+        <button id="btnPulpitFullscreen" class="btn-pulpit-tool" title="Alternar Tela Cheia (F11)">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+          Tela Cheia
+        </button>
+
         <!-- Seleção de Tema Púlpito -->
         <select id="pulpitThemeSelect" class="btn-pulpit-tool" style="background: rgba(255,255,255,0.1); outline: none;">
           <option value="dark">Escuro</option>
@@ -401,6 +432,6 @@
   <div class="toast-container" id="toastContainer"></div>
 
   <!-- Lógica da Aplicação -->
-  <script src="app.js?v=7"></script>
+  <script src="app.js?v=8"></script>
 </body>
 </html>
