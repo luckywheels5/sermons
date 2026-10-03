@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Organizador e editor de esboços homiléticos para pregadores, pastores e líderes cristãos. Modo púlpito e cronômetro integrado.">
+  <title>Esboço de Pregações - Púlpito & Homilética</title>
+  
+  <link rel="icon" type="image/png" sizes="32x32" href="icon.png">
+  <link rel="icon" type="image/svg+xml" href="icon.svg">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#f7f7f5">
+
+  <link rel="stylesheet" href="styles.css?v=7">
+</head>
+<body data-pulpit-theme="dark">
+
+  <div class="app-layout">
+    <!-- BARRA LATERAL AUTO-RETRÁTIL (ÍCONES EM REPOUSO, EXPANDIDA NO HOVER) -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="brand-badge" title="Esboço Púlpito — Gestor Homilético">
+          <img src="icon.svg" alt="Ícone Bíblia e Esboço" class="brand-icon">
+          <div class="brand-text">
+            <div class="brand-title">Esboço Púlpito</div>
+            <div class="brand-subtitle">Gestor Homilético</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sidebar-actions">
+        <button id="btnNewSermon" class="btn-new-sermon" title="Criar um novo esboço de pregação">
+          <svg class="action-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+          <span class="btn-text">Novo Esboço</span>
+        </button>
+
+        <div class="search-box" title="Buscar esboços por título, texto ou tema">
+          <svg class="search-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          <input type="text" id="searchInput" placeholder="Buscar texto, tema, título..." autocomplete="off">
+        </div>
+      </div>
+
+      <div class="sidebar-filters">
+        <button class="filter-chip active" data-filter="all">Todos</button>
+        <button class="filter-chip" data-filter="pronto">Prontos</button>
+        <button class="filter-chip" data-filter="rascunho">Rascunhos</button>
+        <button class="filter-chip" data-filter="pregado">Pregados</button>
+      </div>
+
+      <!-- Lista Rolável de Esboços -->
+      <div class="sermon-list" id="sermonListContainer">
+        <!-- Renderizado dinamicamente via app.js -->
+      </div>
+
+      <div class="sidebar-footer">
+        <span id="sermonCountLabel" class="sermon-count-text">0 esboços salvos</span>
+        <button id="btnOpenBackupModal" class="btn-secondary btn-backup-sidebar" title="Fazer backup ou restaurar (JSON)">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          <span class="btn-text">Backup</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- ÁREA PRINCIPAL (EDITOR HOMILÉTICO) -->
+    <main class="main-content">
+      <!-- Barra Superior -->
+      <header class="top-navbar">
+        <div class="navbar-title-section">
+          <button id="btnToggleSidebar" class="btn-toggle-sidebar" title="Alternar barra lateral (Ctrl + B)">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect width="18" height="18" x="3" y="3" rx="2" ry="2"/>
+              <path d="M9 3v18"/>
+            </svg>
+          </button>
+          <div class="status-indicator">
+            <span class="status-dot" id="saveStatusDot"></span>
+            <span id="saveStatusText">Pronto</span>
+          </div>
+        </div>
+
+        <div class="navbar-actions">
+          <button id="btnToggleTheme" class="btn-secondary btn-icon-only" title="Alternar Modo Claro / Escuro (Ctrl + Shift + D)" aria-label="Alternar tema">
+            <svg id="themeIconSun" class="theme-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="5"></circle>
+              <line x1="12" y1="1" x2="12" y2="3"></line>
+              <line x1="12" y1="21" x2="12" y2="23"></line>
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+              <line x1="1" y1="12" x2="3" y2="12"></line>
+              <line x1="21" y1="12" x2="23" y2="12"></line>
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+            </svg>
+            <svg id="themeIconMoon" class="theme-icon hidden" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>
+          </button>
+
+          <button id="btnTemplates" class="btn-secondary" title="Usar modelos homiléticos prontos">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+            Modelos
+          </button>
+
+          <button id="btnPrint" class="btn-secondary" title="Imprimir ficha de pregação ou salvar em PDF">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+            Imprimir / PDF
+          </button>
+
+          <button id="btnDeleteSermon" class="btn-secondary" style="color: var(--danger);" title="Excluir este esboço">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+            Excluir
+          </button>
+
+          <button id="btnEnterPulpit" class="btn-pulpit" title="Entrar no Modo Púlpito com tela cheia e cronômetro">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            Modo Púlpito
+          </button>
+        </div>
+      </header>
+
+      <!-- Formulário do Editor de Homilética -->
+      <div class="editor-scroll-area">
+        <div class="editor-container">
+
+          <!-- CARD 1: IDENTIFICAÇÃO E CABEÇALHO DO SERMÃO -->
+          <section class="card-section">
+            <div class="form-group">
+              <label class="form-label" for="sermonTitle">
+                Título do Sermão / Mensagem
+                <span class="hint">Título atraente e memorável</span>
+              </label>
+              <input type="text" id="sermonTitle" class="input-text input-title" placeholder="Ex: A Paz que Supera todo o Entendimento">
+            </div>
+
+            <div class="form-grid">
+              <div class="form-group">
+                <label class="form-label" for="sermonPassage">Texto Bíblico Principal</label>
+                <input type="text" id="sermonPassage" class="input-text" placeholder="Ex: Filipenses 4:4-9">
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="sermonTheme">Tema Central / Assunto</label>
+                <input type="text" id="sermonTheme" class="input-text" placeholder="Ex: Confiança em Meio à Ansiedade">
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="sermonType">Tipo Homilético</label>
+                <select id="sermonType" class="select-input">
+                  <option value="expositivo">Expositivo (Versículo por Versículo)</option>
+                  <option value="tematico">Temático (Assunto com vários textos)</option>
+                  <option value="textual">Textual (Baseado nas partes do texto)</option>
+                  <option value="ceia">Santa Ceia / Comunhão</option>
+                  <option value="festivo">Festivo / Especial</option>
+                  <option value="evangelistico">Evangelístico / Apelo</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="sermonSeries">Série de Mensagens</label>
+                <input type="text" id="sermonSeries" class="input-text" placeholder="Ex: Alegria Inabalável">
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="sermonDate">Data Prevista / Ministração</label>
+                <input type="date" id="sermonDate" class="input-text">
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="sermonStatus">Status do Esboço</label>
+                <select id="sermonStatus" class="select-input">
+                  <option value="rascunho">Em Rascunho / Preparação</option>
+                  <option value="pronto">Pronto para Pregar</option>
+                  <option value="pregado">Já Ministrado</option>
+                </select>
+              </div>
+
+              <div class="form-group col-span-full">
+                <label class="form-label" for="sermonPassageText">
+                  Texto Bíblico Completo dos Versículos
+                  <span class="hint">Cole ou digite os versículos para leitura no púlpito</span>
+                </label>
+                <textarea id="sermonPassageText" class="textarea-custom" rows="3" placeholder="Cole aqui os versículos bíblicos na íntegra. Eles serão exibidos com destaque elegante no Modo Púlpito para leitura imediata durante a pregação."></textarea>
+              </div>
+            </div>
+          </section>
+
+          <!-- CARD 2: INTRODUÇÃO HOMILÉTICA -->
+          <section class="card-section">
+            <div class="card-header">
+              <div class="card-header-left">
+                <div class="card-icon">1</div>
+                <div>
+                  <h3 class="card-title">Introdução Homilética</h3>
+                  <div class="card-description">Capte a atenção, estabeleça o contexto bíblico e declare a tese central.</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="homiletics-guide">
+              <div class="guide-icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>
+              </div>
+              <div class="guide-text">
+                <h4>Dica Homilética para Introdução:</h4>
+                <p>Comece com uma pergunta instigante ou fato relevante. Mostre aos ouvintes <em>por que</em> essa mensagem importa para a vida deles hoje e apresente a proposição principal.</p>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="sermonIntro">
+                Conteúdo da Introdução
+                <span class="hint">Gancho de atenção, contexto histórico e proposição central</span>
+              </label>
+              <textarea id="sermonIntro" class="textarea-custom" rows="5" placeholder="Escreva a introdução da sua mensagem aqui..."></textarea>
+            </div>
+          </section>
+
+          <!-- CARD 3: CORPO DA MENSAGEM (TÓPICOS PRINCIPAIS) -->
+          <section class="card-section">
+            <div class="card-header">
+              <div class="card-header-left">
+                <div class="card-icon">2</div>
+                <div>
+                  <h3 class="card-title">Corpo do Sermão (Tópicos Principais)</h3>
+                  <div class="card-description">Pontos estruturados com explicação bíblica, ilustração e aplicação prática.</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Lista de Tópicos Dinâmicos -->
+            <div id="topicsContainer" class="topics-list">
+              <!-- Renderizado via app.js -->
+            </div>
+
+            <button type="button" id="btnAddTopic" class="btn-add-topic">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+              Adicionar Novo Ponto / Tópico
+            </button>
+          </section>
+
+          <!-- CARD 4: CONCLUSÃO & APELO -->
+          <section class="card-section">
+            <div class="card-header">
+              <div class="card-header-left">
+                <div class="card-icon">3</div>
+                <div>
+                  <h3 class="card-title">Conclusão & Apelo</h3>
+                  <div class="card-description">Recapitulação dos pontos, desafio prático e convite final.</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="sermonConclusion">
+                Conteúdo da Conclusão
+                <span class="hint">Recapitulação, aplicação final e oração</span>
+              </label>
+              <textarea id="sermonConclusion" class="textarea-custom" rows="5" placeholder="Sintetize os pontos principais e conduza a igreja a uma decisão ou oração de resposta..."></textarea>
+            </div>
+          </section>
+
+          <!-- CARD 5: HISTÓRICO DE MINISTRAÇÕES -->
+          <section class="card-section">
+            <div class="card-header">
+              <div class="card-header-left">
+                <div class="card-icon">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+                </div>
+                <div>
+                  <h3 class="card-title">Histórico de Ministrações</h3>
+                  <div class="card-description">Onde e quando esta mensagem já foi pregada.</div>
+                </div>
+              </div>
+            </div>
+
+            <div id="deliveriesContainer" class="deliveries-list">
+              <!-- Renderizado via app.js -->
+            </div>
+
+            <div style="display: flex; gap: 10px; margin-top: 10px;">
+              <input type="date" id="newDeliveryDate" class="input-text" style="max-width: 170px;">
+              <input type="text" id="newDeliveryLocation" class="input-text" placeholder="Igreja / Congregação / Evento">
+              <input type="text" id="newDeliveryNotes" class="input-text" placeholder="Notas / Feedback">
+              <button type="button" id="btnAddDelivery" class="btn-secondary" style="white-space: nowrap;">Registrar</button>
+            </div>
+          </section>
+
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- ==========================================================================
+       MODO PÚLPITO (TELA CHEIA OTIMIZADA PARA O PREGADOR)
+       ========================================================================== -->
+  <div class="pulpit-overlay" id="pulpitOverlay">
+    <header class="pulpit-header">
+      <div class="pulpit-header-left">
+        <!-- Cronômetro de Púlpito -->
+        <div class="pulpit-timer-display" id="pulpitTimerDisplay">00:00</div>
+        <div class="timer-controls">
+          <button id="btnTimerToggle" class="btn-timer-action" title="Iniciar / Pausar">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            <span id="btnTimerToggleLabel">Iniciar</span>
+          </button>
+          <button id="btnTimerReset" class="btn-timer-action" title="Zerar cronômetro">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+            Zerar
+          </button>
+        </div>
+      </div>
+
+      <div class="pulpit-header-center" id="pulpitHeaderTitle">Título da Mensagem</div>
+
+      <div class="pulpit-header-right">
+        <!-- Seleção de Tema Púlpito -->
+        <select id="pulpitThemeSelect" class="btn-pulpit-tool" style="background: rgba(255,255,255,0.1); outline: none;">
+          <option value="dark">Escuro</option>
+          <option value="amber">Âmbar (Alto Contraste)</option>
+          <option value="light">Claro</option>
+        </select>
+
+        <!-- Ajuste de Tipografia -->
+        <div class="font-size-controls">
+          <button id="btnFontDec" class="btn-pulpit-tool" title="Diminuir fonte">A-</button>
+          <button id="btnFontInc" class="btn-pulpit-tool" title="Aumentar fonte">A+</button>
+        </div>
+
+        <button id="btnExitPulpit" class="btn-exit-pulpit" title="Sair do modo púlpito (ESC)">Sair (ESC)</button>
+      </div>
+    </header>
+
+    <main class="pulpit-body" id="pulpitBodyScroll">
+      <div class="pulpit-content" id="pulpitRenderArea">
+        <!-- Conteúdo limpo e ampliado renderizado aqui -->
+      </div>
+    </main>
+  </div>
+
+  <!-- MODAL DE MODELOS HOMILÉTICOS -->
+  <div class="modal-backdrop" id="templatesModal">
+    <div class="modal-box">
+      <h3 class="modal-title">Modelos Homiléticos Prontos</h3>
+      <p style="font-size: 0.9rem; color: #64748b;">Escolha uma estrutura clássica para preencher o esboço atual com um clique:</p>
+
+      <div style="display: flex; flex-direction: column; gap: 12px;">
+        <button id="btnApplyExpository" class="btn-secondary" style="justify-content: flex-start; text-align: left; padding: 12px;">
+          <div>
+            <strong>Modelo Expositivo</strong>
+            <div style="font-size: 0.8rem; color: #64748b;">Estrutura fiel ao texto bíblico, versículo por versículo com exegese e aplicação.</div>
+          </div>
+        </button>
+
+        <button id="btnApplyThematic" class="btn-secondary" style="justify-content: flex-start; text-align: left; padding: 12px;">
+          <div>
+            <strong>Modelo Temático</strong>
+            <div style="font-size: 0.8rem; color: #64748b;">Aborda um tema específico (ex: Fé, Oração, Família) com argumentos bíblicos interligados.</div>
+          </div>
+        </button>
+
+        <button id="btnApplyTextual" class="btn-secondary" style="justify-content: flex-start; text-align: left; padding: 12px;">
+          <div>
+            <strong>Modelo Textual</strong>
+            <div style="font-size: 0.8rem; color: #64748b;">As divisões do sermão são retiradas diretamente das partes de um versículo-chave.</div>
+          </div>
+        </button>
+      </div>
+
+      <div style="display: flex; justify-content: flex-end; margin-top: 10px;">
+        <button id="btnCloseTemplatesModal" class="btn-secondary">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL DE BACKUP & EXPORTAÇÃO -->
+  <div class="modal-backdrop" id="backupModal">
+    <div class="modal-box">
+      <h3 class="modal-title">Backup e Sincronização</h3>
+      <p style="font-size: 0.9rem; color: #64748b;">Seus sermões são salvos com segurança de forma local e no banco de dados.</p>
+
+      <div style="display: flex; flex-direction: column; gap: 12px;">
+        <button id="btnExportJSON" class="btn-secondary" style="padding: 12px; justify-content: center;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Baixar Arquivo de Backup (JSON)
+        </button>
+
+        <label class="btn-secondary" style="padding: 12px; justify-content: center; cursor: pointer;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          Restaurar do Arquivo (JSON)
+          <input type="file" id="importFileInput" accept=".json" style="display: none;">
+        </label>
+      </div>
+
+      <div style="display: flex; justify-content: flex-end; margin-top: 10px;">
+        <button id="btnCloseBackupModal" class="btn-secondary">Fechar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Contêiner de Notificações Toast -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Lógica da Aplicação -->
+  <script src="app.js?v=7"></script>
+</body>
+</html>

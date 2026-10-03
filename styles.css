@@ -1,0 +1,1469 @@
+/* ==========================================================================
+   ESTILOS - ESBOÇO DE PREGAÇÕES (PÚLPITO & HOMILÉTICA)
+   Suporte Completo a Modo Claro e Modo Escuro (Notion & Apple Design System)
+   Transição suave, tons neutros confortáveis, sem roxo e sem laranja.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. VARIÁVEIS DE TEMA: MODO CLARO (Default & [data-theme="light"])
+   -------------------------------------------------------------------------- */
+:root, [data-theme="light"] {
+  --bg-main: #fbfbfa;              /* Fundo geral arejado */
+  --bg-card: #ffffff;              /* Cartões brancos nítidos */
+  --bg-sidebar: #f7f7f5;           /* Barra lateral no mesmo tom do app */
+  --bg-sidebar-hover: #efefec;
+  --bg-sidebar-active: #e8e7e4;
+  --bg-topbar: #ffffff;
+  --bg-subtle: #fafaf9;
+
+  --border-color: #e9e9e7;
+  --border-card: #e5e5e3;
+  --border-subtle: #f1f1ef;
+
+  --text-main: #37352f;            /* Texto clássico de leitura */
+  --text-muted: #787774;           /* Rótulos e metadados suaves */
+  --text-sidebar: #5f5e5b;
+  --text-sidebar-bright: #37352f;
+
+  --primary: #2f3437;
+  --primary-hover: #1e2022;
+  --accent-blue: #2383e2;
+
+  --success: #2e7d32;
+  --danger: #b91c1c;
+  --warning: #d97706;
+
+  --bg-input: #ffffff;
+  --border-input: #e2e2df;
+  --border-input-focus: #8c8983;
+
+  --bg-badge: #efefec;
+  --border-badge: #e2e2df;
+  --text-badge: #5f5e5b;
+
+  --btn-sec-bg: #ffffff;
+  --btn-sec-hover: #f7f7f5;
+  --btn-sec-border: #d3d1cb;
+  --btn-sec-text: #37352f;
+
+  --btn-pulpit-bg: #2f3437;
+  --btn-pulpit-hover: #1e2022;
+  --btn-pulpit-text: #ffffff;
+
+  --modal-bg: #ffffff;
+  --modal-overlay: rgba(15, 15, 15, 0.4);
+
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 10px;
+  --shadow-sm: 0 1px 2px rgba(15, 15, 15, 0.04);
+  --shadow-md: 0 4px 6px -1px rgba(15, 15, 15, 0.05);
+
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+  --font-serif: "Georgia", "Cambria", "Times New Roman", serif;
+  --pulpit-font-size: 24px;
+}
+
+/* --------------------------------------------------------------------------
+   2. VARIÁVEIS DE TEMA: MODO ESCURO ([data-theme="dark"])
+   Grafite e ardósia neutros, alta legibilidade, contraste perfeito.
+   -------------------------------------------------------------------------- */
+[data-theme="dark"] {
+  --bg-main: #141414;              /* Fundo grafite profundo e relaxante */
+  --bg-card: #1e1e1e;              /* Cartão com profundidade sutil */
+  --bg-sidebar: #191919;           /* Barra lateral escura suave */
+  --bg-sidebar-hover: #262626;
+  --bg-sidebar-active: #303030;
+  --bg-topbar: #191919;
+  --bg-subtle: #191919;
+
+  --border-color: #2b2b2b;
+  --border-card: #2f2f2f;
+  --border-subtle: #262626;
+
+  --text-main: #e6e6e5;            /* Texto claro confortável */
+  --text-muted: #9b9a97;           /* Rótulos suaves */
+  --text-sidebar: #9b9a97;
+  --text-sidebar-bright: #ededed;
+
+  --primary: #ededed;
+  --primary-hover: #ffffff;
+  --accent-blue: #3b82f6;
+
+  --success: #4ade80;
+  --danger: #f87171;
+  --warning: #fbbf24;
+
+  --bg-input: #181818;
+  --border-input: #333333;
+  --border-input-focus: #666666;
+
+  --bg-badge: #27272a;
+  --border-badge: #3f3f46;
+  --text-badge: #d4d4d8;
+
+  --btn-sec-bg: #222222;
+  --btn-sec-hover: #2c2c2c;
+  --btn-sec-border: #383838;
+  --btn-sec-text: #ededed;
+
+  --btn-pulpit-bg: #3f3f46;
+  --btn-pulpit-hover: #52525b;
+  --btn-pulpit-text: #ffffff;
+
+  --modal-bg: #1e1e1e;
+  --modal-overlay: rgba(0, 0, 0, 0.75);
+
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 4px 14px rgba(0, 0, 0, 0.55);
+}
+
+/* Suporte automático ao tema do sistema caso não haja preferência manual salva */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg-main: #141414;
+    --bg-card: #1e1e1e;
+    --bg-sidebar: #191919;
+    --bg-sidebar-hover: #262626;
+    --bg-sidebar-active: #303030;
+    --bg-topbar: #191919;
+    --bg-subtle: #191919;
+
+    --border-color: #2b2b2b;
+    --border-card: #2f2f2f;
+    --border-subtle: #262626;
+
+    --text-main: #e6e6e5;
+    --text-muted: #9b9a97;
+    --text-sidebar: #9b9a97;
+    --text-sidebar-bright: #ededed;
+
+    --primary: #ededed;
+    --primary-hover: #ffffff;
+    --accent-blue: #3b82f6;
+
+    --success: #4ade80;
+    --danger: #f87171;
+    --warning: #fbbf24;
+
+    --bg-input: #181818;
+    --border-input: #333333;
+    --border-input-focus: #666666;
+
+    --bg-badge: #27272a;
+    --border-badge: #3f3f46;
+    --text-badge: #d4d4d8;
+
+    --btn-sec-bg: #222222;
+    --btn-sec-hover: #2c2c2c;
+    --btn-sec-border: #383838;
+    --btn-sec-text: #ededed;
+
+    --btn-pulpit-bg: #3f3f46;
+    --btn-pulpit-hover: #52525b;
+    --btn-pulpit-text: #ffffff;
+
+    --modal-bg: #1e1e1e;
+    --modal-overlay: rgba(0, 0, 0, 0.75);
+
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
+    --shadow-md: 0 4px 14px rgba(0, 0, 0, 0.55);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   3. TEMAS ESPECÍFICOS DO MODO PÚLPITO (Apresentação / Tela de Ministração)
+   -------------------------------------------------------------------------- */
+[data-pulpit-theme="dark"] {
+  --pulpit-bg: #141414;
+  --pulpit-text: #ededed;
+  --pulpit-muted: #9b9a97;
+  --pulpit-card: #202020;
+  --pulpit-border: #2e2e2e;
+  --pulpit-accent: #ffffff;
+  
+  --pulpit-bible-bg: #1a1a1a;
+  --pulpit-bible-border: #71717a;
+  --pulpit-bible-text: #ffffff;
+  
+  --pulpit-timer-text: #ededed;
+  --pulpit-timer-bg: rgba(255, 255, 255, 0.06);
+}
+
+[data-pulpit-theme="amber"] {
+  --pulpit-bg: #f7f4ed;
+  --pulpit-text: #2f2a24;
+  --pulpit-muted: #786f65;
+  --pulpit-card: #eeeae1;
+  --pulpit-border: #ddd7cb;
+  --pulpit-accent: #2f2a24;
+  
+  --pulpit-bible-bg: #e5dfd2;
+  --pulpit-bible-border: #786f65;
+  --pulpit-bible-text: #1a1714;
+  
+  --pulpit-timer-text: #2f2a24;
+  --pulpit-timer-bg: rgba(0, 0, 0, 0.05);
+}
+
+[data-pulpit-theme="light"] {
+  --pulpit-bg: #ffffff;
+  --pulpit-text: #37352f;
+  --pulpit-muted: #787774;
+  --pulpit-card: #fbfbfa;
+  --pulpit-border: #e9e9e7;
+  --pulpit-accent: #37352f;
+  
+  --pulpit-bible-bg: #f7f7f5;
+  --pulpit-bible-border: #787774;
+  --pulpit-bible-text: #191919;
+  
+  --pulpit-timer-text: #37352f;
+  --pulpit-timer-bg: #f1f1ef;
+}
+
+/* --------------------------------------------------------------------------
+   4. RESET E BASE
+   -------------------------------------------------------------------------- */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--bg-main);
+  color: var(--text-main);
+  line-height: 1.5;
+  height: 100vh;
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.app-layout {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  position: relative;
+}
+
+/* --------------------------------------------------------------------------
+   5. BARRA LATERAL AUTO-RETRÁTIL (ÍCONES EM REPOUSO, EXPANDIDA NO HOVER)
+   Quando o cursor não está sobre ela: 68px (trilho de ícones).
+   Quando o cursor está sobre ela: 310px (índice completo revelado).
+   -------------------------------------------------------------------------- */
+.sidebar {
+  width: 68px;
+  min-width: 68px;
+  background-color: var(--bg-sidebar);
+  color: var(--text-sidebar);
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid var(--border-color);
+  flex-shrink: 0;
+  transition: width 0.24s cubic-bezier(0.4, 0, 0.2, 1),
+              min-width 0.24s cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 0.24s cubic-bezier(0.4, 0, 0.2, 1),
+              background-color 0.2s ease;
+  overflow: hidden;
+  z-index: 40;
+  white-space: nowrap;
+}
+
+/* Quando o cursor estiver sobre ela: expande suavemente */
+.sidebar:hover,
+.sidebar.pinned {
+  width: 310px;
+  min-width: 310px;
+  box-shadow: 4px 0 20px rgba(0, 0, 0, 0.08);
+}
+
+/* Modo totalmente recolhido (se usuário desejar foco 100% livre) */
+.sidebar.collapsed {
+  width: 0 !important;
+  min-width: 0 !important;
+  border-right: none !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* Cabeçalho */
+.sidebar-header {
+  height: 56px;
+  padding: 0 16px;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-shrink: 0;
+}
+
+.brand-badge {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  cursor: pointer;
+}
+
+.brand-icon {
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+  border-radius: 6px;
+  display: block;
+}
+
+.brand-text {
+  opacity: 0;
+  max-width: 0;
+  overflow: hidden;
+  pointer-events: none;
+  transition: opacity 0.18s ease, max-width 0.24s ease;
+}
+
+.sidebar:hover .brand-text,
+.sidebar.pinned .brand-text {
+  opacity: 1;
+  max-width: 220px;
+  pointer-events: auto;
+}
+
+.brand-title {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--text-sidebar-bright);
+  letter-spacing: -0.01em;
+}
+
+.brand-subtitle {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}
+
+/* Ações (Novo Esboço + Busca) */
+.sidebar-actions {
+  padding: 12px 12px 8px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.btn-new-sermon {
+  background: var(--btn-sec-bg);
+  color: var(--btn-sec-text);
+  border: 1px solid var(--btn-sec-border);
+  padding: 9px;
+  height: 42px;
+  border-radius: var(--radius-sm);
+  font-weight: 500;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.15s ease;
+  overflow: hidden;
+}
+
+.btn-new-sermon:hover {
+  background: var(--btn-sec-hover);
+}
+
+.btn-new-sermon .action-icon {
+  flex-shrink: 0;
+}
+
+.btn-new-sermon .btn-text {
+  display: none;
+}
+
+.sidebar:hover .btn-new-sermon .btn-text,
+.sidebar.pinned .btn-new-sermon .btn-text {
+  display: inline;
+}
+
+.search-box {
+  position: relative;
+  width: 100%;
+  height: 38px;
+  display: flex;
+  align-items: center;
+}
+
+.search-icon {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+  pointer-events: none;
+  z-index: 2;
+  transition: left 0.2s ease;
+}
+
+.search-box input {
+  width: 100%;
+  height: 100%;
+  background: var(--bg-input);
+  border: 1px solid var(--border-input);
+  border-radius: var(--radius-sm);
+  padding: 7px 10px 7px 34px;
+  color: var(--text-main);
+  font-size: 0.84rem;
+  outline: none;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.18s ease, border-color 0.15s;
+}
+
+.sidebar:hover .search-box input,
+.sidebar.pinned .search-box input {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.search-box input:focus {
+  border-color: var(--border-input-focus);
+}
+
+/* Filtros rápidos */
+.sidebar-filters {
+  padding: 0 14px 8px 14px;
+  display: flex;
+  gap: 5px;
+  overflow-x: auto;
+  opacity: 0;
+  max-height: 0;
+  pointer-events: none;
+  transition: opacity 0.18s ease, max-height 0.22s ease, padding 0.22s ease;
+}
+
+.sidebar:hover .sidebar-filters,
+.sidebar.pinned .sidebar-filters {
+  opacity: 1;
+  max-height: 40px;
+  pointer-events: auto;
+}
+
+.filter-chip {
+  background: transparent;
+  border: 1px solid var(--border-color);
+  color: var(--text-muted);
+  font-size: 0.73rem;
+  padding: 3px 9px;
+  border-radius: 12px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s ease;
+}
+
+.filter-chip:hover {
+  color: var(--text-main);
+  background: var(--bg-sidebar-hover);
+}
+
+.filter-chip.active {
+  background: var(--btn-sec-bg);
+  border-color: var(--border-input-focus);
+  color: var(--text-main);
+  font-weight: 600;
+  box-shadow: var(--shadow-sm);
+}
+
+/* Lista de Sermões */
+.sermon-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 6px 10px 14px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.sermon-item {
+  padding: 7px 8px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+  transition: all 0.15s ease;
+  position: relative;
+  background: transparent;
+  color: var(--text-main);
+  overflow: hidden;
+}
+
+.sermon-item:hover {
+  background: var(--bg-sidebar-hover);
+}
+
+.sermon-item.active {
+  background: var(--bg-sidebar-active);
+}
+
+.sermon-item-icon {
+  width: 34px;
+  height: 34px;
+  min-width: 34px;
+  border-radius: 6px;
+  background: var(--bg-badge);
+  color: var(--text-badge);
+  border: 1px solid var(--border-badge);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.15s ease;
+}
+
+.sermon-item:hover .sermon-item-icon {
+  border-color: var(--border-input-focus);
+  color: var(--text-main);
+}
+
+.sermon-item.active .sermon-item-icon {
+  background: var(--primary);
+  color: #ffffff;
+  border-color: var(--primary);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+}
+
+.sermon-item-content {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  opacity: 0;
+  max-width: 0;
+  overflow: hidden;
+  pointer-events: none;
+  transition: opacity 0.18s ease, max-width 0.22s ease;
+}
+
+.sidebar:hover .sermon-item-content,
+.sidebar.pinned .sermon-item-content {
+  opacity: 1;
+  max-width: 230px;
+  pointer-events: auto;
+}
+
+.sermon-item-title {
+  font-size: 0.86rem;
+  font-weight: 600;
+  color: var(--text-main);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sermon-item-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.74rem;
+  color: var(--text-muted);
+}
+
+.sermon-item-badge {
+  display: inline-block;
+  padding: 1px 5px;
+  border-radius: 3px;
+  font-size: 0.68rem;
+  font-weight: 500;
+  text-transform: capitalize;
+  background: var(--bg-badge);
+  color: var(--text-badge);
+  border: 1px solid var(--border-badge);
+}
+
+.sermon-item-series {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  font-style: italic;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Rodapé */
+.sidebar-footer {
+  padding: 10px 14px;
+  border-top: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.sermon-count-text {
+  display: none;
+}
+
+.btn-backup-sidebar {
+  padding: 6px 10px;
+  font-size: 0.76rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+}
+
+.btn-backup-sidebar .btn-text {
+  display: none;
+}
+
+.sidebar:hover .sidebar-footer,
+.sidebar.pinned .sidebar-footer {
+  justify-content: space-between;
+}
+
+.sidebar:hover .sermon-count-text,
+.sidebar.pinned .sermon-count-text {
+  display: inline;
+}
+
+.sidebar:hover .btn-backup-sidebar .btn-text,
+.sidebar.pinned .btn-backup-sidebar .btn-text {
+  display: inline;
+}
+
+/* --------------------------------------------------------------------------
+   6. BARRA DE NAVEGAÇÃO SUPERIOR (TOP NAVBAR)
+   -------------------------------------------------------------------------- */
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--bg-main);
+  height: 100vh;
+  overflow: hidden;
+  min-width: 0;
+  transition: background-color 0.2s ease;
+}
+
+.top-navbar {
+  height: 52px;
+  background: var(--bg-topbar);
+  border-bottom: 1px solid var(--border-color);
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.navbar-title-section {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.btn-toggle-sidebar {
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--text-muted);
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-toggle-sidebar:hover {
+  background: var(--bg-sidebar-hover);
+  color: var(--text-main);
+}
+
+.status-indicator {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+.status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--success);
+}
+
+.navbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-secondary {
+  background: var(--btn-sec-bg);
+  border: 1px solid var(--btn-sec-border);
+  color: var(--btn-sec-text);
+  padding: 5px 11px;
+  border-radius: var(--radius-sm);
+  font-size: 0.82rem;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-secondary:hover {
+  background: var(--btn-sec-hover);
+}
+
+.btn-icon-only {
+  padding: 5px 8px;
+  justify-content: center;
+}
+
+.theme-icon.hidden {
+  display: none !important;
+}
+
+.btn-pulpit {
+  background: var(--btn-pulpit-bg);
+  color: var(--btn-pulpit-text);
+  border: 1px solid var(--btn-pulpit-bg);
+  padding: 6px 14px;
+  border-radius: var(--radius-sm);
+  font-size: 0.82rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-pulpit:hover {
+  background: var(--btn-pulpit-hover);
+}
+
+/* --------------------------------------------------------------------------
+   7. ÁREA DO EDITOR HOMILÉTICO
+   -------------------------------------------------------------------------- */
+.editor-scroll-area {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px 32px 80px 32px;
+}
+
+.editor-container {
+  max-width: 840px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.card-section {
+  background: var(--bg-card);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-card);
+  padding: 20px 22px;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border-subtle);
+  padding-bottom: 8px;
+}
+
+.card-header-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.card-icon {
+  width: 24px;
+  height: 24px;
+  border-radius: 5px;
+  background: var(--bg-badge);
+  color: var(--text-badge);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 0.78rem;
+  border: 1px solid var(--border-badge);
+}
+
+.card-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.card-description {
+  font-size: 0.76rem;
+  color: var(--text-muted);
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 12px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.form-group.col-span-full {
+  grid-column: 1 / -1;
+}
+
+.form-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-main);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.form-label span.hint {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  font-weight: 400;
+}
+
+.input-text, .select-input {
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-input);
+  background: var(--bg-input);
+  color: var(--text-main);
+  font-size: 0.88rem;
+  font-family: inherit;
+  outline: none;
+  transition: all 0.15s ease;
+}
+
+.input-text:focus, .select-input:focus, .textarea-custom:focus {
+  border-color: var(--border-input-focus);
+}
+
+.input-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-main);
+  border: 1px solid transparent;
+  background: transparent;
+  padding: 6px 0;
+}
+
+.input-title:focus {
+  border-bottom-color: var(--border-input-focus);
+}
+
+.textarea-custom {
+  width: 100%;
+  padding: 9px 11px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-input);
+  background: var(--bg-input);
+  color: var(--text-main);
+  font-size: 0.88rem;
+  font-family: inherit;
+  resize: vertical;
+  min-height: 80px;
+  line-height: 1.6;
+  outline: none;
+}
+
+/* --------------------------------------------------------------------------
+   8. TÓPICOS DO SERMÃO E HOMILÉTICA
+   -------------------------------------------------------------------------- */
+.topics-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.topic-card {
+  border: 1px solid var(--border-card);
+  border-left: 3px solid var(--text-muted);
+  border-radius: var(--radius-sm);
+  padding: 14px;
+  background: var(--bg-subtle);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  position: relative;
+  transition: all 0.15s;
+}
+
+.topic-top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.topic-number-badge {
+  font-size: 0.72rem;
+  font-weight: 600;
+  background: var(--bg-badge);
+  color: var(--text-badge);
+  border: 1px solid var(--border-badge);
+  padding: 2px 7px;
+  border-radius: 10px;
+}
+
+.btn-remove-topic {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 3px 6px;
+  border-radius: 3px;
+  font-size: 0.76rem;
+  transition: color 0.15s;
+}
+
+.btn-remove-topic:hover {
+  color: var(--danger);
+  background: rgba(185, 28, 28, 0.1);
+}
+
+.btn-add-topic {
+  background: var(--btn-sec-bg);
+  border: 1px dashed var(--btn-sec-border);
+  color: var(--text-muted);
+  padding: 9px;
+  border-radius: var(--radius-sm);
+  font-weight: 500;
+  font-size: 0.84rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-add-topic:hover {
+  background: var(--btn-sec-hover);
+  color: var(--text-main);
+  border-color: var(--border-input-focus);
+}
+
+.homiletics-guide {
+  background: var(--bg-subtle);
+  border: 1px solid var(--border-card);
+  border-left: 3px solid var(--text-muted);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.guide-icon {
+  color: var(--text-muted);
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.guide-text h4 {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-main);
+  margin-bottom: 2px;
+}
+
+.guide-text p {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+.deliveries-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.delivery-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 10px;
+  background: var(--bg-subtle);
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius-sm);
+  font-size: 0.82rem;
+  color: var(--text-main);
+}
+
+/* --------------------------------------------------------------------------
+   9. MODO PÚLPITO (TELA CHEIA OTIMIZADA PARA O PREGADOR)
+   -------------------------------------------------------------------------- */
+.pulpit-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 9999;
+  background-color: var(--pulpit-bg, #141414);
+  color: var(--pulpit-text, #ededed);
+  flex-direction: column;
+}
+
+.pulpit-overlay.active {
+  display: flex;
+}
+
+.pulpit-header {
+  height: 56px;
+  padding: 0 24px;
+  background: rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--pulpit-border, #333333);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+
+.pulpit-header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.pulpit-timer-display {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--pulpit-timer-bg, rgba(255, 255, 255, 0.06));
+  padding: 4px 10px;
+  border-radius: var(--radius-sm);
+  font-family: monospace;
+  font-size: 1.15rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  color: var(--pulpit-timer-text, #ededed);
+  border: 1px solid var(--pulpit-border, #333333);
+}
+
+.pulpit-timer-display.warning {
+  border-color: #b59f3b;
+}
+
+.pulpit-timer-display.danger {
+  border-color: #c44f4f;
+  animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+.timer-controls {
+  display: flex;
+  gap: 4px;
+}
+
+.btn-timer-action {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--pulpit-text, #ededed);
+  border: 1px solid var(--pulpit-border, #333333);
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+}
+
+.btn-timer-action:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.pulpit-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.pulpit-theme-select {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--pulpit-text, #ededed);
+  border: 1px solid var(--pulpit-border, #333333);
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  outline: none;
+  cursor: pointer;
+}
+
+.pulpit-theme-select option {
+  background: #222222;
+  color: #ffffff;
+}
+
+.pulpit-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 40px 24px 120px 24px;
+  display: flex;
+  justify-content: center;
+}
+
+.pulpit-content-wrap {
+  width: 100%;
+  max-width: 900px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  font-size: var(--pulpit-font-size, 24px);
+  line-height: 1.7;
+}
+
+.pulpit-title-hero {
+  font-size: 1.8em;
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  color: var(--pulpit-accent, #ffffff);
+}
+
+.pulpit-meta-banner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.75em;
+  color: var(--pulpit-muted, #9b9a97);
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--pulpit-border, #333333);
+}
+
+.pulpit-bible-card {
+  background: var(--pulpit-bible-bg, #1a1a1a);
+  border: 1px solid var(--pulpit-border, #2e2e2e);
+  border-left: 4px solid var(--pulpit-bible-border, #71717a);
+  border-radius: 6px;
+  padding: 18px 22px;
+}
+
+.pulpit-bible-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  font-family: var(--font-sans);
+}
+
+.pulpit-bible-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.65em;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--pulpit-muted, #9b9a97);
+}
+
+.pulpit-bible-reference {
+  font-size: 1.05em;
+  font-weight: 700;
+  color: var(--pulpit-accent, #ffffff);
+  font-family: var(--font-serif);
+}
+
+.pulpit-bible-text {
+  font-size: 1.05em;
+  line-height: 1.8;
+  color: var(--pulpit-bible-text, #ffffff);
+  font-style: italic;
+}
+
+.pulpit-section {
+  background: var(--pulpit-card, #202020);
+  border: 1px solid var(--pulpit-border, #2e2e2e);
+  border-radius: 6px;
+  padding: 20px 24px;
+}
+
+.pulpit-section-label {
+  font-family: var(--font-sans);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.6em;
+  font-weight: 700;
+  color: var(--pulpit-muted, #9b9a97);
+  margin-bottom: 8px;
+}
+
+.pulpit-topic-item {
+  border-top: 1px solid var(--pulpit-border, #2e2e2e);
+  padding-top: 18px;
+  margin-top: 18px;
+}
+
+.pulpit-topic-item:first-child {
+  border-top: none;
+  padding-top: 0;
+  margin-top: 0;
+}
+
+.pulpit-topic-title {
+  font-size: 1.2em;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: var(--pulpit-accent, #ffffff);
+}
+
+.pulpit-topic-scripture {
+  background: var(--pulpit-bible-bg, #1a1a1a);
+  border-left: 3px solid var(--pulpit-bible-border, #71717a);
+  padding: 9px 13px;
+  border-radius: 5px;
+  margin: 8px 0 12px 0;
+  font-size: 0.95em;
+}
+
+.pulpit-topic-scripture-ref {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 0.82em;
+  color: var(--pulpit-accent, #ffffff);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-bottom: 3px;
+}
+
+.pulpit-topic-scripture-text {
+  font-style: italic;
+  line-height: 1.6;
+  color: var(--pulpit-bible-text, #ffffff);
+}
+
+.pulpit-illustration-box {
+  background: rgba(255, 255, 255, 0.03);
+  border-left: 3px solid #787774;
+  padding: 10px 14px;
+  border-radius: 5px;
+  margin: 12px 0;
+  font-style: italic;
+  font-size: 0.88em;
+  color: var(--pulpit-text, #d4d4d8);
+}
+
+.pulpit-application-box {
+  background: rgba(255, 255, 255, 0.03);
+  border-left: 3px solid #9b9a97;
+  padding: 10px 14px;
+  border-radius: 5px;
+  margin: 12px 0;
+  font-size: 0.88em;
+  color: var(--pulpit-text, #d4d4d8);
+}
+
+/* --------------------------------------------------------------------------
+   10. MODAIS
+   -------------------------------------------------------------------------- */
+.modal-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: var(--modal-overlay);
+  backdrop-filter: blur(4px);
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-backdrop.active {
+  display: flex;
+}
+
+.modal-box {
+  background: var(--modal-bg);
+  width: 90%;
+  max-width: 480px;
+  border-radius: var(--radius-md);
+  padding: 20px;
+  box-shadow: var(--shadow-md);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  border: 1px solid var(--border-card);
+  color: var(--text-main);
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.modal-title {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.modal-body {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+.template-card {
+  border: 1px solid var(--border-color);
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-subtle);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.template-card:hover {
+  background: var(--bg-sidebar-hover);
+  border-color: var(--border-input-focus);
+}
+
+.template-card h4 {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--text-main);
+  margin-bottom: 2px;
+}
+
+.template-card p {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+/* --------------------------------------------------------------------------
+   11. NOTIFICAÇÕES TOAST
+   -------------------------------------------------------------------------- */
+.toast-container {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  z-index: 99999;
+}
+
+.toast {
+  background: var(--bg-card);
+  color: var(--text-main);
+  padding: 9px 14px;
+  border-radius: var(--radius-sm);
+  font-size: 0.82rem;
+  box-shadow: var(--shadow-md);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--border-color);
+  animation: slideIn 0.2s ease-out;
+}
+
+.toast.success { border-left: 3px solid var(--success); }
+.toast.error { border-left: 3px solid var(--danger); }
+
+@keyframes slideIn {
+  from { transform: translateY(12px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+/* --------------------------------------------------------------------------
+   12. IMPRESSÃO
+   -------------------------------------------------------------------------- */
+@media print {
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+    height: auto !important;
+    overflow: visible !important;
+    font-size: 11pt;
+  }
+
+  .sidebar, .top-navbar, .btn-new-sermon, .pulpit-overlay, .toast-container, .navbar-actions, .btn-add-topic, .btn-remove-topic {
+    display: none !important;
+  }
+
+  .app-layout, .main-content, .editor-scroll-area {
+    display: block !important;
+    height: auto !important;
+    overflow: visible !important;
+    padding: 0 !important;
+  }
+
+  .card-section {
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    margin-bottom: 14pt !important;
+  }
+
+  .input-title {
+    font-size: 18pt !important;
+    border: none !important;
+    padding: 0 !important;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   13. RESPONSIVIDADE MOBILE E TABLET
+   -------------------------------------------------------------------------- */
+@media (max-width: 768px) {
+  .app-layout {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    min-width: 100%;
+    max-height: 40vh;
+  }
+
+  .sidebar.collapsed {
+    max-height: 0 !important;
+    height: 0 !important;
+  }
+
+  .editor-scroll-area {
+    padding: 14px;
+  }
+
+  .pulpit-body {
+    padding: 20px 14px 80px 14px;
+  }
+}

@@ -1,0 +1,11 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Esboço de Pregações
+GenericName=Gestor Homilético e Púlpito
+Comment=Organizador de sermões e esboços com modo púlpito e cronômetro
+Exec=/home/lucsalmeida/.gemini/antigravity/scratch/esboco-pregacoes/run_app.sh
+Icon=/home/lucsalmeida/.gemini/antigravity/scratch/esboco-pregacoes/icon.png
+Terminal=false
+Categories=Office;Education;Utility;
+StartupNotify=true

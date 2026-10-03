@@ -1,0 +1,27 @@
+# Segurança e Segredos (Conforme checklist obrigatório)
+.env
+.env.*
+*.env
+*.key
+*.pem
+*.cert
+secrets.json
+
+# Banco de dados e armazenamento local
+*.db
+*.sqlite
+*.sqlite3
+storage/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.venv/
+env/
+
+# Sistema operacional e logs
+.DS_Store
+*.log
+*.swp
